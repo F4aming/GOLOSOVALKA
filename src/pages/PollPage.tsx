@@ -5,7 +5,12 @@ import AppToast, { AppToastState } from '../components/AppToast';
 import PageShell from '../components/PageShell';
 import '../styles/main.css';
 import '../styles/PollPage.css';
-import { getPoll, PollDto, revokeSimpleVote, voteSimple } from '../api/pollsApi';
+import {
+  getPublicPoll,
+  PollDto,
+  revokeSimpleVotePublic,
+  voteSimplePublic,
+} from '../api/pollsApi';
 
 function votesRu(n: number): string {
   const n10 = n % 10;
@@ -25,7 +30,7 @@ const PollPage: React.FC = () => {
 
   useEffect(() => {
     if (!id) return;
-    getPoll(id)
+    getPublicPoll(id)
       .then((p) => {
         setPoll(p);
         setHasVoted(p.has_voted);
@@ -50,7 +55,7 @@ const PollPage: React.FC = () => {
     if (!poll) return;
     setRevokeModalOpen(false);
     try {
-      const updated = await revokeSimpleVote(poll.id);
+      const updated = await revokeSimpleVotePublic(poll.id);
       setPoll(updated);
       setHasVoted(false);
       setSelectedOptions([]);
@@ -62,7 +67,7 @@ const PollPage: React.FC = () => {
       }
       if (axios.isAxiosError(e) && e.response?.status === 409) {
         setToast({ tone: 'error', text: 'Нельзя отменить этот голос (старый формат или голосование закрыто).' });
-        const refreshed = await getPoll(poll.id).catch(() => null);
+        const refreshed = await getPublicPoll(poll.id).catch(() => null);
         if (refreshed) setPoll(refreshed);
         return;
       }
@@ -73,7 +78,7 @@ const PollPage: React.FC = () => {
   const handleVote = async () => {
     if (!poll || selectedOptions.length === 0) return;
     try {
-      const updated = await voteSimple(poll.id, selectedOptions);
+      const updated = await voteSimplePublic(poll.id, selectedOptions);
       setPoll(updated);
       setHasVoted(true);
       setToast({ tone: 'success', text: 'Голос успешно отправлен.' });
@@ -81,7 +86,7 @@ const PollPage: React.FC = () => {
       if (axios.isAxiosError(e) && e.response?.status === 409) {
         setToast({ tone: 'info', text: 'Вы уже голосовали в этом голосовании.' });
         setHasVoted(true);
-        const refreshed = await getPoll(poll.id).catch(() => null);
+        const refreshed = await getPublicPoll(poll.id).catch(() => null);
         if (refreshed) setPoll(refreshed);
         return;
       }

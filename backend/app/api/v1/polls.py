@@ -42,7 +42,7 @@ async def create_simple(
         multiple_choice=payload.multiple_choice,
         allow_vote_cancellation=payload.allow_vote_cancellation,
     )
-    return await svc.to_poll_out(poll, voter_id=user_id)
+    return await svc.to_poll_out_owner(poll, voter_id=user_id)
 
 
 @router.post("/survey", response_model=PollOut, status_code=status.HTTP_201_CREATED)
@@ -55,7 +55,7 @@ async def create_survey(
     poll = await svc.create_survey(
         owner_id=user_id, title=payload.title, questions=[q.model_dump() for q in payload.questions]
     )
-    return await svc.to_poll_out(poll, voter_id=user_id)
+    return await svc.to_poll_out_owner(poll, voter_id=user_id)
 
 
 @router.get("", response_model=list[PollOut])
@@ -69,7 +69,7 @@ async def list_polls(
     polls = await svc.list_polls(owner_id=user_id, kind=parsed_kind)
     voted = await svc.voted_poll_ids_for_user(user_id, [p.id for p in polls])
     return [
-        PollOut.model_validate(p).model_copy(update={"has_voted": p.id in voted})
+        PollOut.model_validate(p).model_copy(update={"has_voted": p.id in voted, "can_manage": True})
         for p in polls
     ]
 
@@ -83,7 +83,7 @@ async def get_poll(
         poll = await svc.get_poll(_parse_poll_id(poll_id), owner_id=user_id)
     except LookupError:
         raise HTTPException(status_code=404, detail="Poll not found")
-    return await svc.to_poll_out(poll, voter_id=user_id)
+    return await svc.to_poll_out_owner(poll, voter_id=user_id)
 
 
 @router.delete("/{poll_id}")
@@ -119,7 +119,7 @@ async def vote_simple(
         if code in {"ALREADY_VOTED"}:
             raise HTTPException(status_code=409, detail="Already voted")
         raise HTTPException(status_code=400, detail=code)
-    return await svc.to_poll_out(poll, voter_id=user_id)
+    return await svc.to_poll_out_owner(poll, voter_id=user_id)
 
 
 @router.post("/{poll_id}/revoke-vote", response_model=PollOut)
@@ -146,7 +146,7 @@ async def revoke_simple_vote(
         if code in {"WRONG_KIND"}:
             raise HTTPException(status_code=400, detail=code)
         raise HTTPException(status_code=400, detail=code)
-    return await svc.to_poll_out(poll, voter_id=user_id)
+    return await svc.to_poll_out_owner(poll, voter_id=user_id)
 
 
 @router.post("/{poll_id}/submit", response_model=PollOut)
@@ -170,7 +170,7 @@ async def submit_survey(
         if code in {"ALREADY_VOTED"}:
             raise HTTPException(status_code=409, detail="Already voted")
         raise HTTPException(status_code=400, detail=code)
-    return await svc.to_poll_out(poll, voter_id=user_id)
+    return await svc.to_poll_out_owner(poll, voter_id=user_id)
 
 
 @router.post("/{poll_id}/finish", response_model=PollOut)
@@ -182,5 +182,5 @@ async def finish(
         poll = await svc.finish_poll(owner_id=user_id, poll_id=_parse_poll_id(poll_id))
     except LookupError:
         raise HTTPException(status_code=404, detail="Poll not found")
-    return await svc.to_poll_out(poll, voter_id=user_id)
+    return await svc.to_poll_out_owner(poll, voter_id=user_id)
 

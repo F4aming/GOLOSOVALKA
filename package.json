@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack serve --config webpack.config.js",
     "build": "webpack --config webpack.config.js",
+    "postbuild": "node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "cypress:open": "cypress open",

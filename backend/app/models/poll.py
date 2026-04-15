@@ -4,7 +4,7 @@ import enum
 import uuid
 from datetime import datetime
 
-from sqlalchemy import JSON, Boolean, DateTime, Enum, ForeignKey, Integer, String, Text, UniqueConstraint, func
+from sqlalchemy import JSON, Boolean, DateTime, Enum, ForeignKey, Index, Integer, String, Text, UniqueConstraint, func, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -53,18 +53,37 @@ class PollQuestion(Base):
 
 
 class PollBallot(Base):
-    """Один пользователь — не более одного голоса по опросу/голосованию."""
+    """Не более одного голоса на зарегистрированного пользователя или гостя (X-Guest-Id) на опрос."""
 
     __tablename__ = "poll_ballots"
 
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     poll_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("polls.id", ondelete="CASCADE"), primary_key=True
+        UUID(as_uuid=True), ForeignKey("polls.id", ondelete="CASCADE"), nullable=False
     )
-    user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    user_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=True
     )
+    guest_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     simple_vote_indexes: Mapped[list[int] | None] = mapped_column(JSON, nullable=True)
+
+    __table_args__ = (
+        Index(
+            "uq_poll_ballots_poll_user",
+            "poll_id",
+            "user_id",
+            unique=True,
+            postgresql_where=text("user_id IS NOT NULL"),
+        ),
+        Index(
+            "uq_poll_ballots_poll_guest",
+            "poll_id",
+            "guest_id",
+            unique=True,
+            postgresql_where=text("guest_id IS NOT NULL"),
+        ),
+    )
 
 
 class PollOption(Base):

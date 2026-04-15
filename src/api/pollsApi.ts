@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getOrCreateGuestId } from '../utils/guestId';
 
 export type PollOption = {
   id: string;
@@ -23,12 +24,13 @@ export type PollDto = {
   is_finished: boolean;
   participant_count: number;
   has_voted: boolean;
+  can_manage: boolean;
   created_at: string;
   questions: PollQuestion[];
 };
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8010/api/v1',
+  baseURL: process.env.API_BASE_URL || 'http://127.0.0.1:8000/api/v1',
 });
 
 api.interceptors.request.use((config) => {
@@ -36,6 +38,11 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${token}`;
+  }
+  const url = config.url ?? '';
+  if (url.includes('/public/polls')) {
+    config.headers = config.headers ?? {};
+    config.headers['X-Guest-Id'] = getOrCreateGuestId();
   }
   return config;
 });
@@ -47,6 +54,12 @@ export async function listPolls(kind?: 'simple' | 'survey'): Promise<PollDto[]> 
 
 export async function getPoll(id: string): Promise<PollDto> {
   const response = await api.get<PollDto>(`/polls/${id}`);
+  return response.data;
+}
+
+/** Публичная карточка опроса — без обязательной авторизации (гость по X-Guest-Id). */
+export async function getPublicPoll(id: string): Promise<PollDto> {
+  const response = await api.get<PollDto>(`/public/polls/${id}`);
   return response.data;
 }
 
@@ -73,13 +86,30 @@ export async function voteSimple(id: string, optionIndexes: number[]): Promise<P
   return response.data;
 }
 
+export async function voteSimplePublic(id: string, optionIndexes: number[]): Promise<PollDto> {
+  const response = await api.post<PollDto>(`/public/polls/${id}/vote`, {
+    option_indexes: optionIndexes,
+  });
+  return response.data;
+}
+
 export async function revokeSimpleVote(id: string): Promise<PollDto> {
   const response = await api.post<PollDto>(`/polls/${id}/revoke-vote`);
   return response.data;
 }
 
+export async function revokeSimpleVotePublic(id: string): Promise<PollDto> {
+  const response = await api.post<PollDto>(`/public/polls/${id}/revoke-vote`);
+  return response.data;
+}
+
 export async function submitSurvey(id: string, answers: Record<number, number>): Promise<PollDto> {
   const response = await api.post<PollDto>(`/polls/${id}/submit`, { answers });
+  return response.data;
+}
+
+export async function submitSurveyPublic(id: string, answers: Record<number, number>): Promise<PollDto> {
+  const response = await api.post<PollDto>(`/public/polls/${id}/submit`, { answers });
   return response.data;
 }
 

@@ -4,6 +4,7 @@ import AppToast, { AppToastState } from '../components/AppToast';
 import SiteFooter from '../components/SiteFooter';
 import '../styles//PollCreator.css';
 import { createSurvey, deletePoll, listPolls, PollDto } from '../api/pollsApi';
+import { absoluteAppUrl } from '../config/appBase';
 
 type Question = {
   questionText: string;
@@ -122,7 +123,7 @@ const PollCreator: React.FC = () => {
 
   // Копирование ссылки на опрос
   const copyPollLink = (pollId: string) => {
-    const url = `${window.location.origin}/poll/${pollId}`;
+    const url = absoluteAppUrl(`/poll/${pollId}`);
     navigator.clipboard.writeText(url).then(() => {
       setToast({ tone: 'success', text: 'Ссылка скопирована!' });
     });

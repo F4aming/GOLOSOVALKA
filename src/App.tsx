@@ -11,13 +11,11 @@ import PollPage from './pages/PollPage';
 import PollCreator from './pages/PollCreator';
 import PollViewer from './pages/PollViewer';
 import AboutPage from './pages/AboutPage';
+import { routerBasename } from './config/appBase';
 
 const App: React.FC = () => {
-  const basename = process.env.NODE_ENV === 'production' ? '/voting-platform' : '/';
-
-
   return (
-    <Router basename={basename}>
+    <Router basename={routerBasename()}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreatePoll />} />

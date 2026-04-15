@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SiteFooter from '../components/SiteFooter';
 import '../styles/createPoll.css';
 import { createSimplePoll, deletePoll, listPolls, PollDto } from '../api/pollsApi';
+import { absoluteAppUrl } from '../config/appBase';
 
 const CreatePoll: React.FC = () => {
   const [question, setQuestion] = useState('');
@@ -92,7 +93,7 @@ const CreatePoll: React.FC = () => {
   };
 
   const copyPollLink = (pollId: string) => {
-    const url = `${window.location.origin}/vote/${pollId}`;
+    const url = absoluteAppUrl(`/vote/${pollId}`);
     navigator.clipboard.writeText(url).then(() => {
       showToastMessage('Ссылка скопирована!');
     });

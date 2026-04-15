@@ -5,7 +5,7 @@ import AppToast, { AppToastState } from '../components/AppToast';
 import PageShell from '../components/PageShell';
 import '../styles/main.css';
 import '../styles/PollPage.css';
-import { finishPoll, getPoll, PollDto, submitSurvey } from '../api/pollsApi';
+import { finishPoll, getPublicPoll, PollDto, submitSurveyPublic } from '../api/pollsApi';
 
 type Votes = {
   [questionIndex: number]: number;
@@ -21,7 +21,7 @@ const PollViewer: React.FC = () => {
 
   useEffect(() => {
     if (!id) return;
-    getPoll(id)
+    getPublicPoll(id)
       .then((p) => {
         setPoll(p);
         if (p.has_voted) setSubmitted(true);
@@ -67,7 +67,7 @@ const PollViewer: React.FC = () => {
       return;
     }
 
-    submitSurvey(
+    submitSurveyPublic(
       poll.id,
       Object.entries(votes).reduce<Record<number, number>>((acc, [k, v]) => {
         acc[Number(k)] = v;
@@ -83,7 +83,7 @@ const PollViewer: React.FC = () => {
         if (axios.isAxiosError(e) && e.response?.status === 409) {
           setToast({ tone: 'info', text: 'Вы уже отправляли ответы в этом опросе.' });
           setSubmitted(true);
-          const refreshed = await getPoll(poll.id).catch(() => null);
+          const refreshed = await getPublicPoll(poll.id).catch(() => null);
           if (refreshed) setPoll(refreshed);
           return;
         }
@@ -92,6 +92,10 @@ const PollViewer: React.FC = () => {
   };
 
   const handleFinishPoll = () => {
+    if (!poll.can_manage) {
+      setToast({ tone: 'error', text: 'Завершить опрос может только автор.' });
+      return;
+    }
     if (!submitted) {
       setToast({ tone: 'error', text: 'Сначала нужно отправить голос.' });
       return;
@@ -157,10 +161,14 @@ const PollViewer: React.FC = () => {
               <button type="button" className="btn btn-dark" onClick={handleSubmit}>
                 Отправить голос
               </button>
-            ) : (
+            ) : poll.can_manage ? (
               <button type="button" className="btn btn-outline-dark" onClick={handleFinishPoll}>
                 Завершить опрос
               </button>
+            ) : (
+              <div className="alert alert-light border w-100 mb-0 py-2 text-center">
+                Спасибо за участие. Завершить опрос может только автор.
+              </div>
             )
           ) : (
             <>

@@ -51,6 +51,7 @@ class PollOut(BaseModel):
     is_finished: bool
     participant_count: int
     has_voted: bool = False
+    can_manage: bool = False
     created_at: datetime
     questions: list[PollQuestionOut]
 

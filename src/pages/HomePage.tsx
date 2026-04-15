@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SiteFooter from '../components/SiteFooter';
 import '../styles/main.css';
 
@@ -18,7 +18,10 @@ const HomePage: React.FC = () => {
     <div className="d-flex flex-column min-vh-100">
       <nav className="navbar navbar-expand navbar-light bg-white shadow-sm fixed-top">
         <div className="container-fluid">
-          <a className="navbar-brand d-flex align-items-center text-dark" href="/">
+          <Link
+            className="navbar-brand d-flex align-items-center text-dark text-decoration-none"
+            to="/"
+          >
             <img
               src="https://cdn-icons-png.flaticon.com/512/1533/1533890.png"
               alt="Логотип"
@@ -27,10 +30,8 @@ const HomePage: React.FC = () => {
               className="me-2"
               style={{ filter: 'grayscale(100%) brightness(0)' }}
             />
-            <a className="nav-link fw-bold" href="/" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
-                Голосовалка
-            </a>
-          </a>
+            <span className="fw-bold">Голосовалка</span>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -46,9 +47,9 @@ const HomePage: React.FC = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <a className="nav-link" href="/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }}>
+                <Link className="nav-link" to="/about">
                   О платформе
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
