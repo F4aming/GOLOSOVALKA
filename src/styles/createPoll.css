@@ -1,0 +1,309 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFadeOut {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.create-poll-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.6s ease-out;
+  color: #000;
+}
+
+.create-poll-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.create-poll-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.create-poll-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.create-poll-form input:not([type="radio"]):not([type="checkbox"]) {
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #fff;
+  color: #000;
+}
+
+.create-poll-form input[type="radio"],
+.create-poll-form input[type="checkbox"] {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+}
+
+.create-button {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #000;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.create-button:hover {
+  background-color: #333;
+}
+
+.form-group input[type="radio"] {
+  width: auto;
+  min-width: 1.05rem;
+  height: 1.05rem;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+  transform: scale(1.1);
+  cursor: pointer;
+  accent-color: #000;
+}
+
+.create-poll-check-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.form-group label.create-poll-check-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: #000;
+  margin-bottom: 0;
+}
+
+.form-group label.create-poll-check-label input[type="checkbox"] {
+  width: auto;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+  transform: scale(1.05);
+  cursor: pointer;
+  accent-color: #000;
+}
+
+.create-poll-check-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: #444;
+  line-height: 1.4;
+}
+
+.form-group > .create-poll-type-options {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.button-row {
+  margin-top: 1.5rem;
+}
+
+.add-option-button {
+  background-color: #f0f0f0;
+  color: #000;
+  border: 1px solid #000;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.add-option-button:hover {
+  background-color: #e0e0e0;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remove-option-button {
+  background-color: #000;
+  border: none;
+  color: white;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.37rem;
+  transition: background-color 0.2s ease;
+}
+
+.remove-option-button:hover {
+  background-color: #444;
+}
+
+.toast-error {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #000;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  animation: slideInFadeOut 3s ease forwards;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  z-index: 999;
+}
+
+.toast-success {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #444;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  animation: slideInFadeOut 3s ease forwards;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  z-index: 999;
+}
+
+.poll-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #000;
+}
+
+.poll-link {
+  text-decoration: none;
+  color: #000;
+  flex-grow: 1;
+}
+
+.copy-link-button,
+.delete-button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  background-color: #fff;
+  color: #000;
+}
+
+.copy-link-button:hover,
+.delete-button:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .create-poll-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .button-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .option-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .remove-option-button {
+    width: 100%;
+  }
+
+  .form-group > .create-poll-type-options {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 240px) {
+  .create-poll-container {
+    padding: 0.5rem;
+  }
+
+  .create-poll-form input {
+    padding: 0.4rem;
+    font-size: 0.85rem;
+  }
+}

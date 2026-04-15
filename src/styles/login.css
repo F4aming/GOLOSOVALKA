@@ -1,0 +1,90 @@
+.login-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: #fff; /* белый фон */
+  color: #000; /* черный текст */
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: #000;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #000;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.login-form input::placeholder {
+  color: #555;
+}
+
+.login-form input:focus {
+  border-color: #000;
+}
+
+.login-form button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #000; /* черная кнопка */
+  color: #fff; /* белый текст */
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.login-form button[type="submit"]:hover {
+  background-color: #222;
+}
+
+.register-section,
+.back-home-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.register-section p {
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.register-button,
+.back-home-button {
+  background-color: transparent;
+  border: 1px solid #000;
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.register-button:hover,
+.back-home-button:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.back-home-button {
+  margin-top: 10px;
+  display: inline-block;
+}

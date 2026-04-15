@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: voting_platform_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: voting_platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - voting_platform_pgdata:/var/lib/postgresql/data
+
+volumes:
+  voting_platform_pgdata:

@@ -1,0 +1,206 @@
+.poll-page-card {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border: 1px solid #212529;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.vote-button.cancel {
+  background-color: #f44336;
+  margin-top: 1rem;
+}
+
+.vote-button.cancel:hover {
+  background-color: #d32f2f;
+}
+
+.back-wrapper {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.poll-page-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #212529;
+  text-align: center;
+  font-weight: 700;
+}
+
+.option-list,
+.result-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.option-list li,
+.result-list li {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.option-list label:not(.option-label-inline),
+.result-list li {
+  display: flex;
+  align-items: center;
+}
+
+.option-list--with-stats .option-with-stats {
+  margin-bottom: 1.1rem;
+}
+
+.option-row-line {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+.option-label-inline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-weight: inherit;
+}
+
+.option-text {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.option-text--readonly {
+  padding-left: 0.15rem;
+}
+
+.option-stats {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  color: #555;
+  text-align: right;
+  line-height: 1.35;
+}
+
+.option-inline-bar {
+  margin-top: 0.35rem;
+}
+
+.option-list input[type="radio"],
+.option-list input[type="checkbox"] {
+  margin-right: 0.75rem;
+  transform: scale(1.15);
+  cursor: pointer;
+  accent-color: #212529;
+}
+
+h3 {
+  text-align: center;
+  margin-top: 2rem;
+  color: #444;
+}
+
+.result-list {
+  list-style: none;
+  padding: 0;
+}
+
+.result-list li {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.result-label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.result-bar-container {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 20px;
+  position: relative;
+}
+
+.result-bar {
+  background-color: #212529;
+  height: 100%;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: right;
+  padding-right: 6px;
+  white-space: nowrap;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Опрос (несколько вопросов) — те же отступы внутри карточки */
+.poll-page-card .survey-question-card:last-of-type {
+  margin-bottom: 0 !important;
+}
+
+.poll-page-card .form-check-input:focus {
+  border-color: #212529;
+  box-shadow: 0 0 0 0.2rem rgba(33, 37, 41, 0.25);
+}
+
+.poll-page-card .form-check-input:checked {
+  background-color: #212529;
+  border-color: #212529;
+}
+
+.poll-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+.poll-modal-content {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  background: #fff;
+  color: #212529;
+  border: 1px solid #212529;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  text-align: center;
+}
+
+.poll-modal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.poll-modal-text {
+  line-height: 1.45;
+  margin-bottom: 1.25rem !important;
+}
+
+.poll-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+
+
