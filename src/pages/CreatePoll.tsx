@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import SiteFooter from '../components/SiteFooter';
 import '../styles/createPoll.css';
 import { createSimplePoll, deletePoll, listPolls, PollDto } from '../api/pollsApi';
@@ -74,7 +75,14 @@ const CreatePoll: React.FC = () => {
       });
       setPolls(prev => [created, ...prev]);
       navigate(`/vote/${created.id}`);
-    } catch {
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_email');
+        showError('Сессия истекла. Войдите снова.');
+        navigate('/login');
+        return;
+      }
       showError('Не удалось создать голосование');
     }
   };

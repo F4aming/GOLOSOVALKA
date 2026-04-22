@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import AppToast, { AppToastState } from '../components/AppToast';
 import SiteFooter from '../components/SiteFooter';
 import '../styles//PollCreator.css';
@@ -102,7 +103,14 @@ const PollCreator: React.FC = () => {
       setTitle('');
       setQuestions([{ questionText: '', options: ['', ''] }]);
       navigate(`/poll/${created.id}`);
-    } catch {
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_email');
+        setToast({ tone: 'error', text: 'Сессия истекла. Войдите снова.' });
+        navigate('/login');
+        return;
+      }
       setToast({ tone: 'error', text: 'Не удалось создать опрос.' });
     }
   };
