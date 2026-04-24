@@ -18,6 +18,7 @@ class SimplePollCreate(BaseModel):
 class SurveyQuestionCreate(BaseModel):
     question_text: str = Field(min_length=1, max_length=600)
     options: list[str] = Field(min_length=2, max_length=20)
+    multiple_choice: bool = False
 
 
 class SurveyCreate(BaseModel):
@@ -38,6 +39,7 @@ class PollQuestionOut(BaseModel):
     id: UUID
     position: int
     text: str
+    is_multiple_choice: bool
     options: list[PollOptionOut]
 
 
@@ -61,7 +63,7 @@ class SimpleVoteRequest(BaseModel):
 
 
 class SurveySubmitRequest(BaseModel):
-    answers: dict[int, int] = Field(
-        description="key=questionIndex (0..n-1), value=optionIndex (0..m-1)"
+    answers: dict[int, int | list[int]] = Field(
+        description="key=questionIndex (0..n-1), value=optionIndex or list[optionIndex]"
     )
 

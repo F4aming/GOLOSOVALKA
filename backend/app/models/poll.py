@@ -45,6 +45,7 @@ class PollQuestion(Base):
 
     position: Mapped[int] = mapped_column(Integer, nullable=False)
     text: Mapped[str] = mapped_column(Text, nullable=False)
+    is_multiple_choice: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     poll: Mapped[Poll] = relationship(back_populates="questions")
     options: Mapped[list["PollOption"]] = relationship(back_populates="question", cascade="all, delete-orphan")

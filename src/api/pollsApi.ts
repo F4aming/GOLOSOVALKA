@@ -12,6 +12,7 @@ export type PollQuestion = {
   id: string;
   position: number;
   text: string;
+  is_multiple_choice: boolean;
   options: PollOption[];
 };
 
@@ -75,7 +76,7 @@ export async function createSimplePoll(payload: {
 
 export async function createSurvey(payload: {
   title: string;
-  questions: Array<{ question_text: string; options: string[] }>;
+  questions: Array<{ question_text: string; options: string[]; multiple_choice: boolean }>;
 }): Promise<PollDto> {
   const response = await api.post<PollDto>('/polls/survey', payload);
   return response.data;
@@ -103,12 +104,18 @@ export async function revokeSimpleVotePublic(id: string): Promise<PollDto> {
   return response.data;
 }
 
-export async function submitSurvey(id: string, answers: Record<number, number>): Promise<PollDto> {
+export async function submitSurvey(
+  id: string,
+  answers: Record<number, number | number[]>,
+): Promise<PollDto> {
   const response = await api.post<PollDto>(`/polls/${id}/submit`, { answers });
   return response.data;
 }
 
-export async function submitSurveyPublic(id: string, answers: Record<number, number>): Promise<PollDto> {
+export async function submitSurveyPublic(
+  id: string,
+  answers: Record<number, number | number[]>,
+): Promise<PollDto> {
   const response = await api.post<PollDto>(`/public/polls/${id}/submit`, { answers });
   return response.data;
 }

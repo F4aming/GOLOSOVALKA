@@ -10,13 +10,14 @@ import { absoluteAppUrl } from '../config/appBase';
 type Question = {
   questionText: string;
   options: string[];
+  multipleChoice: boolean;
 };
 
 const PollCreator: React.FC = () => {
     const [visible, setVisible] = useState(false);
     const [title, setTitle] = useState('');
     const [questions, setQuestions] = useState<Question[]>([
-        { questionText: '', options: ['', ''] }
+        { questionText: '', options: ['', ''], multipleChoice: false }
     ]);
     const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
     const [polls, setPolls] = useState<PollDto[]>([]);
@@ -33,7 +34,7 @@ const PollCreator: React.FC = () => {
 
   // Добавить вопрос
   const addQuestion = () => {
-    setQuestions([...questions, { questionText: '', options: ['', ''] }]);
+    setQuestions([...questions, { questionText: '', options: ['', ''], multipleChoice: false }]);
   };
 
   // Удаление вопроса (подтверждение)
@@ -61,6 +62,12 @@ const PollCreator: React.FC = () => {
   const updateOptionText = (qIndex: number, oIndex: number, text: string) => {
     const updated = [...questions];
     updated[qIndex].options[oIndex] = text;
+    setQuestions(updated);
+  };
+
+  const updateQuestionMultipleChoice = (qIndex: number, multipleChoice: boolean) => {
+    const updated = [...questions];
+    updated[qIndex].multipleChoice = multipleChoice;
     setQuestions(updated);
   };
 
@@ -97,11 +104,12 @@ const PollCreator: React.FC = () => {
         questions: questions.map(q => ({
           question_text: q.questionText.trim(),
           options: q.options.map(opt => opt.trim()),
+          multiple_choice: q.multipleChoice,
         })),
       });
       setPolls(prev => [created, ...prev]);
       setTitle('');
-      setQuestions([{ questionText: '', options: ['', ''] }]);
+      setQuestions([{ questionText: '', options: ['', ''], multipleChoice: false }]);
       navigate(`/poll/${created.id}`);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 401) {
@@ -200,6 +208,29 @@ const PollCreator: React.FC = () => {
               value={q.questionText}
               onChange={e => updateQuestionText(qIdx, e.target.value)}
             />
+            <div className="mb-2">
+              <label className="form-label mb-1 d-block">Тип ответа:</label>
+              <div className="d-flex gap-3">
+                <label>
+                  <input
+                    type="radio"
+                    name={`questionType_${qIdx}`}
+                    checked={!q.multipleChoice}
+                    onChange={() => updateQuestionMultipleChoice(qIdx, false)}
+                  />{' '}
+                  Один вариант
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name={`questionType_${qIdx}`}
+                    checked={q.multipleChoice}
+                    onChange={() => updateQuestionMultipleChoice(qIdx, true)}
+                  />{' '}
+                  Несколько вариантов
+                </label>
+              </div>
+            </div>
 
             {q.options.map((opt, oIdx) => (
               <div key={oIdx} className="input-group mb-2">

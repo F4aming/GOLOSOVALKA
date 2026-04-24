@@ -98,7 +98,11 @@ class PollService:
         )
         poll.questions = []
         for qi, q in enumerate(questions):
-            qq = PollQuestion(position=qi, text=q["question_text"].strip())
+            qq = PollQuestion(
+                position=qi,
+                text=q["question_text"].strip(),
+                is_multiple_choice=bool(q.get("multiple_choice", False)),
+            )
             qq.options = [PollOption(position=oi, text=opt.strip()) for oi, opt in enumerate(q["options"])]
             poll.questions.append(qq)
         self.db.add(poll)
@@ -273,7 +277,19 @@ class PollService:
         await self.db.commit()
         return await self.get_poll_public(poll_id)
 
-    async def submit_survey(self, *, owner_id: UUID, poll_id, answers: dict[int, int]) -> Poll:
+    @staticmethod
+    def _normalize_answer_indexes(raw: int | list[int], *, allow_multiple: bool) -> list[int]:
+        if isinstance(raw, list):
+            if not raw:
+                raise ValueError("INCOMPLETE")
+            indexes = sorted(set(raw))
+        else:
+            indexes = [raw]
+        if not allow_multiple and len(indexes) != 1:
+            raise ValueError("SINGLE_CHOICE_ONLY")
+        return indexes
+
+    async def submit_survey(self, *, owner_id: UUID, poll_id, answers: dict[int, int | list[int]]) -> Poll:
         poll = await self.get_poll(poll_id, owner_id=owner_id)
         if poll.kind != PollKind.survey:
             raise ValueError("WRONG_KIND")
@@ -290,10 +306,13 @@ class PollService:
             qi = q.position
             if qi not in answers:
                 raise ValueError("INCOMPLETE")
-            oi = answers[qi]
-            if oi < 0 or oi >= len(q.options):
-                raise ValueError("BAD_OPTION_INDEX")
-            q.options[oi].vote_count += 1
+            answer_indexes = self._normalize_answer_indexes(
+                answers[qi], allow_multiple=q.is_multiple_choice
+            )
+            for oi in answer_indexes:
+                if oi < 0 or oi >= len(q.options):
+                    raise ValueError("BAD_OPTION_INDEX")
+                q.options[oi].vote_count += 1
 
         poll.participant_count += 1
         self.db.add(PollBallot(poll_id=poll.id, user_id=owner_id, guest_id=None))
@@ -308,7 +327,7 @@ class PollService:
         self,
         *,
         poll_id,
-        answers: dict[int, int],
+        answers: dict[int, int | list[int]],
         user_id: UUID | None,
         guest_id: UUID | None,
     ) -> Poll:
@@ -329,10 +348,13 @@ class PollService:
             qi = q.position
             if qi not in answers:
                 raise ValueError("INCOMPLETE")
-            oi = answers[qi]
-            if oi < 0 or oi >= len(q.options):
-                raise ValueError("BAD_OPTION_INDEX")
-            q.options[oi].vote_count += 1
+            answer_indexes = self._normalize_answer_indexes(
+                answers[qi], allow_multiple=q.is_multiple_choice
+            )
+            for oi in answer_indexes:
+                if oi < 0 or oi >= len(q.options):
+                    raise ValueError("BAD_OPTION_INDEX")
+                q.options[oi].vote_count += 1
 
         poll.participant_count += 1
         self.db.add(PollBallot(poll_id=poll.id, user_id=voter_uid, guest_id=voter_gid))

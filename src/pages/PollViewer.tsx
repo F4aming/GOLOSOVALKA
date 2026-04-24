@@ -8,7 +8,7 @@ import '../styles/PollPage.css';
 import { finishPoll, getPublicPoll, PollDto, submitSurveyPublic } from '../api/pollsApi';
 
 type Votes = {
-  [questionIndex: number]: number;
+  [questionIndex: number]: number[];
 };
 
 const PollViewer: React.FC = () => {
@@ -44,9 +44,15 @@ const PollViewer: React.FC = () => {
 
   const handleOptionChange = (questionIndex: number, optionIndex: number) => {
     if (submitted || poll.is_finished) return;
+    const question = poll.questions[questionIndex];
+    if (!question) return;
     setVotes((prev) => ({
       ...prev,
-      [questionIndex]: optionIndex,
+      [questionIndex]: question.is_multiple_choice
+        ? prev[questionIndex]?.includes(optionIndex)
+          ? (prev[questionIndex] || []).filter((idx) => idx !== optionIndex)
+          : [...(prev[questionIndex] || []), optionIndex]
+        : [optionIndex],
     }));
   };
 
@@ -62,15 +68,16 @@ const PollViewer: React.FC = () => {
   const handleSubmit = () => {
     if (poll.is_finished) return;
 
-    if (poll.questions.some((_, idx) => votes[idx] === undefined)) {
+    if (poll.questions.some((_, idx) => !votes[idx] || votes[idx].length === 0)) {
       setToast({ tone: 'error', text: 'Пожалуйста, ответьте на все вопросы.' });
       return;
     }
 
     submitSurveyPublic(
       poll.id,
-      Object.entries(votes).reduce<Record<number, number>>((acc, [k, v]) => {
-        acc[Number(k)] = v;
+      Object.entries(votes).reduce<Record<number, number | number[]>>((acc, [k, v]) => {
+        const q = poll.questions[Number(k)];
+        acc[Number(k)] = q?.is_multiple_choice ? v : v[0];
         return acc;
       }, {}),
     )
@@ -123,16 +130,19 @@ const PollViewer: React.FC = () => {
               <h5 className="card-title fw-bold text-dark mb-3">
                 Вопрос {i + 1}: {q.text}
               </h5>
+              <p className="text-muted small mb-2">
+                {q.is_multiple_choice ? 'Можно выбрать несколько вариантов' : 'Можно выбрать только один вариант'}
+              </p>
               {q.options.map((opt, idx) => (
                 <div key={idx} className="form-check mb-2">
                   <input
                     className="form-check-input"
-                    type="radio"
+                    type={q.is_multiple_choice ? 'checkbox' : 'radio'}
                     name={`question_${i}`}
                     id={`q${i}_opt${idx}`}
                     value={idx}
                     disabled={submitted || poll.is_finished}
-                    checked={votes[i] === idx}
+                    checked={Boolean(votes[i]?.includes(idx))}
                     onChange={() => handleOptionChange(i, idx)}
                   />
                   <label className="form-check-label" htmlFor={`q${i}_opt${idx}`}>
@@ -142,7 +152,7 @@ const PollViewer: React.FC = () => {
                 </div>
               ))}
 
-              {!poll.is_finished && !submitted && votes[i] !== undefined && (
+              {!poll.is_finished && !submitted && Boolean(votes[i]?.length) && (
                 <button
                   type="button"
                   className="btn btn-outline-dark btn-sm mt-2"
