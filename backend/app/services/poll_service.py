@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -197,10 +197,8 @@ class PollService:
         if await self.participant_has_voted(poll.id, voter_uid, voter_gid):
             raise ValueError("ALREADY_VOTED")
 
-        for i in set(option_indexes):
-            q.options[i].vote_count += 1
-        poll.participant_count += 1
         stored = sorted(set(option_indexes))
+        selected_option_ids = [q.options[i].id for i in stored]
         self.db.add(
             PollBallot(
                 poll_id=poll.id,
@@ -210,10 +208,29 @@ class PollService:
             )
         )
         try:
+            await self.db.flush()
+            poll_result = await self.db.execute(
+                update(Poll)
+                .where(Poll.id == poll.id)
+                .values(participant_count=Poll.participant_count + 1)
+                .execution_options(synchronize_session=False)
+            )
+            option_result = await self.db.execute(
+                update(PollOption)
+                .where(PollOption.id.in_(selected_option_ids))
+                .values(vote_count=PollOption.vote_count + 1)
+                .execution_options(synchronize_session=False)
+            )
+            if poll_result.rowcount != 1 or option_result.rowcount != len(selected_option_ids):
+                raise ValueError("COUNTER_INVARIANT")
             await self.db.commit()
         except IntegrityError:
             await self.db.rollback()
             raise ValueError("ALREADY_VOTED") from None
+        except Exception:
+            await self.db.rollback()
+            raise
+        self.db.expire_all()
         return await self.get_poll_public(poll_id)
 
     async def revoke_simple_vote(self, *, owner_id: UUID, poll_id) -> Poll:
@@ -260,6 +277,7 @@ class PollService:
             stmt = stmt.where(PollBallot.user_id == voter_uid)
         else:
             stmt = stmt.where(PollBallot.guest_id == voter_gid)
+        stmt = stmt.with_for_update()
         ballot = await self.db.scalar(stmt)
         if ballot is None:
             raise ValueError("NOT_VOTED")
@@ -268,13 +286,37 @@ class PollService:
             raise ValueError("CANNOT_REVOKE_LEGACY_VOTE")
 
         q = poll.questions[0]
+        if len(set(indexes)) != len(indexes):
+            raise ValueError("CORRUPT_BALLOT")
         for i in indexes:
             if i < 0 or i >= len(q.options):
                 raise ValueError("CORRUPT_BALLOT")
-            q.options[i].vote_count = max(0, q.options[i].vote_count - 1)
-        poll.participant_count = max(0, poll.participant_count - 1)
-        await self.db.delete(ballot)
-        await self.db.commit()
+        selected_option_ids = [q.options[i].id for i in indexes]
+
+        try:
+            await self.db.delete(ballot)
+            poll_result = await self.db.execute(
+                update(Poll)
+                .where(Poll.id == poll.id, Poll.participant_count > 0)
+                .values(participant_count=Poll.participant_count - 1)
+                .execution_options(synchronize_session=False)
+            )
+            option_result = await self.db.execute(
+                update(PollOption)
+                .where(
+                    PollOption.id.in_(selected_option_ids),
+                    PollOption.vote_count > 0,
+                )
+                .values(vote_count=PollOption.vote_count - 1)
+                .execution_options(synchronize_session=False)
+            )
+            if poll_result.rowcount != 1 or option_result.rowcount != len(selected_option_ids):
+                raise ValueError("COUNTER_INVARIANT")
+            await self.db.commit()
+        except Exception:
+            await self.db.rollback()
+            raise
+        self.db.expire_all()
         return await self.get_poll_public(poll_id)
 
     @staticmethod
@@ -344,6 +386,7 @@ class PollService:
         if len(answers) != len(poll.questions):
             raise ValueError("INCOMPLETE")
 
+        selected_option_ids: list[UUID] = []
         for q in poll.questions:
             qi = q.position
             if qi not in answers:
@@ -354,15 +397,33 @@ class PollService:
             for oi in answer_indexes:
                 if oi < 0 or oi >= len(q.options):
                     raise ValueError("BAD_OPTION_INDEX")
-                q.options[oi].vote_count += 1
+                selected_option_ids.append(q.options[oi].id)
 
-        poll.participant_count += 1
         self.db.add(PollBallot(poll_id=poll.id, user_id=voter_uid, guest_id=voter_gid))
         try:
+            await self.db.flush()
+            poll_result = await self.db.execute(
+                update(Poll)
+                .where(Poll.id == poll.id)
+                .values(participant_count=Poll.participant_count + 1)
+                .execution_options(synchronize_session=False)
+            )
+            option_result = await self.db.execute(
+                update(PollOption)
+                .where(PollOption.id.in_(selected_option_ids))
+                .values(vote_count=PollOption.vote_count + 1)
+                .execution_options(synchronize_session=False)
+            )
+            if poll_result.rowcount != 1 or option_result.rowcount != len(selected_option_ids):
+                raise ValueError("COUNTER_INVARIANT")
             await self.db.commit()
         except IntegrityError:
             await self.db.rollback()
             raise ValueError("ALREADY_VOTED") from None
+        except Exception:
+            await self.db.rollback()
+            raise
+        self.db.expire_all()
         return await self.get_poll_public(poll_id)
 
     async def finish_poll(self, *, owner_id: UUID, poll_id) -> Poll:
