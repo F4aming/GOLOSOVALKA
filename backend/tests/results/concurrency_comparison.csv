@@ -1,0 +1,5 @@
+participants,repetitions,original_runs_with_loss,original_loss_frequency_pct,fixed_runs_with_loss,fixed_loss_frequency_pct,original_mean_lost_participant_updates,original_mean_participant_loss_pct,fixed_mean_lost_participant_updates,fixed_mean_participant_loss_pct,original_mean_lost_option_updates,original_mean_option_loss_pct,fixed_mean_lost_option_updates,fixed_mean_option_loss_pct,original_mean_batch_duration_ms,fixed_mean_batch_duration_ms
+2,10,9,90.0,0,0.0,0.9,45.0,0,0.0,0.9,45.0,0,0.0,29.12,39.59
+10,10,10,100.0,0,0.0,7.8,78.0,0,0.0,7.5,75.0,0,0.0,206.47,220.32
+20,10,10,100.0,0,0.0,17.6,88.0,0,0.0,17.7,88.5,0,0.0,396.47,379.7
+50,10,10,100.0,0,0.0,45.5,91.0,0,0.0,44.8,89.6,0,0.0,662.45,723.82

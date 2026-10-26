@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,DejaVu Sans,sans-serif;fill:#202124}.title{font-size:30px;font-weight:700}.subtitle{font-size:18px;fill:#5f6368}.axis{font-size:16px}.label{font-size:17px;font-weight:700}.value{font-size:15px;font-weight:700}.grid{stroke:#d9dde3;stroke-width:1}.base{stroke:#51565c;stroke-width:2}</style>
+<text x="700" y="48" text-anchor="middle" class="title">Конкурентное голосование: исходная и исправленная реализации</text>
+<text x="700" y="82" text-anchor="middle" class="subtitle">10 повторений для каждого числа одновременных участников</text>
+<rect x="510" y="103" width="22" height="16" rx="2" fill="#c43c39"/><text x="541" y="117" class="axis">Исходная</text>
+<rect x="680" y="103" width="22" height="16" rx="2" fill="#2878b5"/><text x="711" y="117" class="axis">Исправленная</text>
+<text x="372.5" y="142" text-anchor="middle" class="label">Запуски с потерей обновлений, %</text>
+<line x1="90" y1="650.0" x2="655" y2="650.0" class="grid"/>
+<text x="78" y="656.0" text-anchor="end" class="axis">0</text>
+<line x1="90" y1="550.0" x2="655" y2="550.0" class="grid"/>
+<text x="78" y="556.0" text-anchor="end" class="axis">20</text>
+<line x1="90" y1="450.0" x2="655" y2="450.0" class="grid"/>
+<text x="78" y="456.0" text-anchor="end" class="axis">40</text>
+<line x1="90" y1="350.0" x2="655" y2="350.0" class="grid"/>
+<text x="78" y="356.0" text-anchor="end" class="axis">60</text>
+<line x1="90" y1="250.0" x2="655" y2="250.0" class="grid"/>
+<text x="78" y="256.0" text-anchor="end" class="axis">80</text>
+<line x1="90" y1="150.0" x2="655" y2="150.0" class="grid"/>
+<text x="78" y="156.0" text-anchor="end" class="axis">100</text>
+<line x1="90" y1="650" x2="655" y2="650" class="base"/>
+<rect x="115.6" y="200.0" width="42" height="450.0" fill="#c43c39"/>
+<text x="136.6" y="191.0" text-anchor="middle" class="value">90</text>
+<rect x="163.6" y="648.0" width="42" height="2.0" fill="#2878b5"/>
+<text x="184.6" y="641.0" text-anchor="middle" class="value">0</text>
+<text x="160.6" y="681" text-anchor="middle" class="axis">2</text>
+<rect x="256.9" y="150.0" width="42" height="500.0" fill="#c43c39"/>
+<text x="277.9" y="168.0" text-anchor="middle" class="value">100</text>
+<rect x="304.9" y="648.0" width="42" height="2.0" fill="#2878b5"/>
+<text x="325.9" y="641.0" text-anchor="middle" class="value">0</text>
+<text x="301.9" y="681" text-anchor="middle" class="axis">10</text>
+<rect x="398.1" y="150.0" width="42" height="500.0" fill="#c43c39"/>
+<text x="419.1" y="168.0" text-anchor="middle" class="value">100</text>
+<rect x="446.1" y="648.0" width="42" height="2.0" fill="#2878b5"/>
+<text x="467.1" y="641.0" text-anchor="middle" class="value">0</text>
+<text x="443.1" y="681" text-anchor="middle" class="axis">20</text>
+<rect x="539.4" y="150.0" width="42" height="500.0" fill="#c43c39"/>
+<text x="560.4" y="168.0" text-anchor="middle" class="value">100</text>
+<rect x="587.4" y="648.0" width="42" height="2.0" fill="#2878b5"/>
+<text x="608.4" y="641.0" text-anchor="middle" class="value">0</text>
+<text x="584.4" y="681" text-anchor="middle" class="axis">50</text>
+<text x="372.5" y="716" text-anchor="middle" class="axis">Одновременные участники</text>
+<text x="1027.5" y="142" text-anchor="middle" class="label">Средняя доля потерянных инкрементов, %</text>
+<line x1="745" y1="650.0" x2="1310" y2="650.0" class="grid"/>
+<text x="733" y="656.0" text-anchor="end" class="axis">0</text>
+<line x1="745" y1="550.0" x2="1310" y2="550.0" class="grid"/>
+<text x="733" y="556.0" text-anchor="end" class="axis">20</text>
+<line x1="745" y1="450.0" x2="1310" y2="450.0" class="grid"/>
+<text x="733" y="456.0" text-anchor="end" class="axis">40</text>
+<line x1="745" y1="350.0" x2="1310" y2="350.0" class="grid"/>
+<text x="733" y="356.0" text-anchor="end" class="axis">60</text>
+<line x1="745" y1="250.0" x2="1310" y2="250.0" class="grid"/>
+<text x="733" y="256.0" text-anchor="end" class="axis">80</text>
+<line x1="745" y1="150.0" x2="1310" y2="150.0" class="grid"/>
+<text x="733" y="156.0" text-anchor="end" class="axis">100</text>
+<line x1="745" y1="650" x2="1310" y2="650" class="base"/>
+<rect x="770.6" y="425.0" width="42" height="225.0" fill="#c43c39"/>
+<text x="791.6" y="416.0" text-anchor="middle" class="value">45</text>
+<rect x="818.6" y="648.0" width="42" height="2.0" fill="#2878b5"/>
+<text x="839.6" y="641.0" text-anchor="middle" class="value">0</text>
+<text x="815.6" y="681" text-anchor="middle" class="axis">2</text>
+<rect x="911.9" y="260.0" width="42" height="390.0" fill="#c43c39"/>
+<text x="932.9" y="251.0" text-anchor="middle" class="value">78</text>
+<rect x="959.9" y="648.0" width="42" height="2.0" fill="#2878b5"/>
+<text x="980.9" y="641.0" text-anchor="middle" class="value">0</text>
+<text x="956.9" y="681" text-anchor="middle" class="axis">10</text>
+<rect x="1053.1" y="210.0" width="42" height="440.0" fill="#c43c39"/>
+<text x="1074.1" y="201.0" text-anchor="middle" class="value">88</text>
+<rect x="1101.1" y="648.0" width="42" height="2.0" fill="#2878b5"/>
+<text x="1122.1" y="641.0" text-anchor="middle" class="value">0</text>
+<text x="1098.1" y="681" text-anchor="middle" class="axis">20</text>
+<rect x="1194.4" y="195.0" width="42" height="455.0" fill="#c43c39"/>
+<text x="1215.4" y="186.0" text-anchor="middle" class="value">91</text>
+<rect x="1242.4" y="648.0" width="42" height="2.0" fill="#2878b5"/>
+<text x="1263.4" y="641.0" text-anchor="middle" class="value">0</text>
+<text x="1239.4" y="681" text-anchor="middle" class="axis">50</text>
+<text x="1027.5" y="716" text-anchor="middle" class="axis">Одновременные участники</text>
+<text x="700" y="756" text-anchor="middle" class="subtitle">Потерянный инкремент = число сохранённых бюллетеней − participant_count</text>
+<text x="700" y="788" text-anchor="middle" class="subtitle">Все HTTP-запросы завершились успешно; исправленная версия: 0 потерь во всех 40 запусках</text>
+</svg>

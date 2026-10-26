@@ -1,0 +1,5 @@
+participants,repetitions,consistent_runs,successful_requests,sent_requests,mean_batch_duration_ms,min_batch_duration_ms,max_batch_duration_ms,request_median_ms,request_p95_ms,throughput_requests_per_second,max_participant_mismatch,max_option_mismatch
+2,10,1,20,20,29.12,19.94,87.13,20.64,63.16,68.68,1,1
+10,10,0,100,100,206.47,183.46,251.35,175.06,230.46,48.43,8,8
+20,10,0,200,200,396.47,377.72,413.57,338.84,393.31,50.44,18,18
+50,10,0,500,500,662.45,623.66,704.43,493.12,651.84,75.48,47,47
