@@ -1,0 +1,22 @@
+# Corrected concurrent voting experiment
+
+Run time (Europe/Moscow): 2026-10-26T16:58:08+03:00
+Git commit: `c0d8646b7d7618a330c63ed9485f2ccef2b3d58a`
+Branch: `concurrent-voting-tests`
+Python: 3.12.14
+FastAPI: 0.115.12
+SQLAlchemy: 2.0.41
+HTTPX: 0.28.1
+PostgreSQL: PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+
+The measured interval contains only the concurrent HTTP vote requests. User and poll preparation is excluded.
+
+| Participants | Runs consistent | Successful / sent | Mean batch, ms | Min–max, ms | Request median, ms | Request p95, ms | Throughput, req/s | Max counter mismatch |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 2 | 10/10 | 20/20 | 39.59 | 23.16–148.48 | 26.32 | 61.46 | 50.51 | 0/0 |
+| 10 | 10/10 | 100/100 | 220.32 | 185.92–279.14 | 188.77 | 267.01 | 45.39 | 0/0 |
+| 20 | 10/10 | 200/200 | 379.70 | 357.76–408.01 | 331.07 | 383.86 | 52.67 | 0/0 |
+| 50 | 10/10 | 500/500 | 723.82 | 704.21–752.97 | 543.69 | 712.84 | 69.08 | 0/0 |
+
+Counter mismatch is reported as `ballots - participant_count` / `ballots - vote_count`.
+Every run is consistent only when all requests succeed and ballots, participant_count, and vote_count equal the requested participant count.
